@@ -125,7 +125,7 @@ $user = $associadoInfo['user'] ?? '';
 							</div>
 							
 							<!-- Adicione campos ocultos para incluir a página e diretório corretos -->
-							<input type="hidden" name="page" value="familias/list-familias">
+							<input type="hidden" name="page" value="familias/list-family">
 						</form>
 
                         <!-- Tabela de familias -->
