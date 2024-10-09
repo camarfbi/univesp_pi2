@@ -1,0 +1,16 @@
+RewriteEngine On
+
+# Remove .php extension from URL
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [L]
+
+# Redirect root to index.php
+RewriteRule ^$ index.php [L]
+
+# Configurar a página de erro 404
+ErrorDocument 404 /404.php
+# Configurar a página de erro 500
+ErrorDocument 500 /erro.php
+# Configurar a página de erro 501
+ErrorDocument 501 /erro.php
