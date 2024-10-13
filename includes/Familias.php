@@ -136,5 +136,11 @@ class Associado {
         }
         return $existingImage ?? 'default-image.png'; // Retorna imagem padrão se não houver upload
     }
+	
+	// Método para excluir uma família pelo ID
+    public function deleteFamilia(int $id): bool {
+        $stmt = $this->pdo->prepare('DELETE FROM associado WHERE id = :id');
+        return $stmt->execute([':id' => $id]);
+    }
 }
 ?>

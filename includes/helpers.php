@@ -31,3 +31,10 @@ function handleResponseMessage(): ?array {
     }
     return null;
 }
+
+// Função para construir a URL de redirecionamento
+function buildRedirectUrl(string $basePage, int $id = 0): string {
+    $hasDirectory = strpos($basePage, '/') !== false;
+    $finalUrl = $hasDirectory ? $basePage : 'cestas/' . $basePage;
+    return $finalUrl . ($id > 0 ? '&id=' . $id : '');
+}

@@ -148,3 +148,69 @@ class AssociadoSearch {
         return $pagination;
     }
 }
+
+class cestaSearch {
+    private $pdo;
+    private $recordsPerPage;
+    private $currentPage;
+
+    public function __construct(\PDO $pdo, int $recordsPerPage, int $currentPage)
+    {
+        $this->pdo = $pdo;
+        $this->recordsPerPage = $recordsPerPage;
+        $this->currentPage = $currentPage;
+    }
+
+    public function searchCestas(string $searchTerm): array
+    {
+        $offset = ($this->currentPage - 1) * $this->recordsPerPage;
+
+        $sql = 'SELECT * FROM cesta';
+        if ($searchTerm) {
+            $sql .= ' WHERE nome LIKE :searchTerm OR tipo LIKE :searchTerm';
+        }
+        $sql .= ' LIMIT :offset, :recordsPerPage';
+
+        $stmt = $this->pdo->prepare($sql);
+        if ($searchTerm) {
+            $stmt->bindValue(':searchTerm', "%$searchTerm%", \PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':offset', $offset, \PDO::PARAM_INT);
+        $stmt->bindValue(':recordsPerPage', $this->recordsPerPage, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public function getTotalRecords(string $searchTerm): int
+    {
+        $sql = 'SELECT COUNT(*) FROM cesta';
+        if ($searchTerm) {
+            $sql .= ' WHERE nome LIKE :searchTerm OR tipo LIKE :searchTerm';
+        }
+
+        $stmt = $this->pdo->prepare($sql);
+        if ($searchTerm) {
+            $stmt->bindValue(':searchTerm', "%$searchTerm%", \PDO::PARAM_STR);
+        }
+
+        $stmt->execute();
+
+        return (int)$stmt->fetchColumn();
+    }
+
+    public function generatePagination(int $totalRecords, string $searchTerm): string
+    {
+        $totalPages = ceil($totalRecords / $this->recordsPerPage);
+        $pagination = '';
+
+        if ($totalPages > 1) {
+            for ($page = 1; $page <= $totalPages; $page++) {
+                $pagination .= '<a href="?search=' . urlencode($searchTerm) . '&page=' . $page . '&recordsPerPage=' . $this->recordsPerPage . '" class="pagination-link">' . $page . '</a> ';
+            }
+        }
+
+        return $pagination;
+    }
+}

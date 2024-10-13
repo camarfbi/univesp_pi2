@@ -5,6 +5,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require './includes/helpers.php';
 require './includes/Search.php'; 
 require './includes/Familias.php';
 require './includes/SessionMessage.php';
@@ -23,25 +24,12 @@ $pdo = $db->getPdo();
 
 // Verifica se o usuário está autenticado
 $auth = new Auth(new User($pdo));
-if (!$auth->isAuthenticated()) {
-    header('Location: index.php');
-    exit();
-}
+checkAuthentication($auth);
 
-// ID do usuário logado (admin)
-$userLogadoId = $_SESSION['user_id'];
-
-// Inicializa o PermissionManager
-$permissionManager = new PermissionManager($pdo, $userLogadoId);
-
-// Obtém o caminho da página dinamicamente
+$userId = $_SESSION['user_id'];
+$permissionManager = new PermissionManager($pdo, $userId);
 $pageAndDir = $permissionManager->getCurrentPageAndDirectory();
-$dirAndPage = $pageAndDir['dir'] . "/" . $pageAndDir['page'];
-
-// Verifica permissão
-if (!$permissionManager->hasPermission($pageAndDir['page'], $pageAndDir['dir'])) {
-    SessionMessage::setResponseAndRedirect("Você não tem permissão para acessar esta página.", 'bg-danger-500', $dirAndPage);
-}
+checkPermission($permissionManager, $pageAndDir['page'], $pageAndDir['dir']);
 
 // Inicializa o model do Associado
 $associadoModel = new Associado($pdo);
