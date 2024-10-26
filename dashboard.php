@@ -118,7 +118,7 @@ if ($userInfo) {
         <a class="flex items-center" href="dashboard">
           <img src="assets/images/logo/logo.jpg" class="black_logo" alt="logo" style="width: 30px; border-radius: 5px;">
           <img src="assets/images/logo/logo.jpg" class="white_logo" alt="logo" style="width: 30px; border-radius: 5px;">
-          <span class="ltr:ml-3 rtl:mr-3 text-xl font-Inter font-bold text-slate-900 dark:text-white">AEAS</span>
+          <span class="ltr:ml-3 rtl:mr-3 text-xl font-Inter font-bold text-slate-900 dark:text-white">ASAS</span>
         </a>
         <!-- Sidebar Type Button -->
         <div id="sidebar_type" class="cursor-pointer text-slate-900 dark:text-white text-lg">
