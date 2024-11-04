@@ -18,6 +18,10 @@ use App\Includes\Associado;
 use App\Includes\PermissionManager;
 use App\Includes\SessionMessage;
 
+use function App\Includes\checkAuthentication;
+use function App\Includes\checkPermission;
+use function App\Includes\handleResponseMessage;
+
 // Inicializa a conexão com o banco de dados e a autenticação
 $db = new Database();
 $pdo = $db->getPdo();

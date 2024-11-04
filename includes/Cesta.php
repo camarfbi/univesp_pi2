@@ -10,7 +10,7 @@ class Cesta {
         $this->pdo = $pdo;
     }
 
-    // Insere novo associado
+    // Insere nova cesta
     public function insertCesta(array $data): int {
         $stmt = $this->pdo->prepare('
             INSERT INTO cesta (
@@ -20,10 +20,10 @@ class Cesta {
             )');
 
         $stmt->execute($data);
-        return (int) $this->pdo->lastInsertId(); // Retorna o ID do novo associado
+        return (int) $this->pdo->lastInsertId(); // Retorna o ID do nova cesta
     }
 
-    // Atualiza um associado existente
+    // Atualiza uma cesta existente
     public function updateCesta(int $id, array $data): bool {
         $fields = [
             'nome', 'tipo', 'produtos'

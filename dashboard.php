@@ -43,16 +43,6 @@ if (!$auth->isAuthenticated()) {
 $permissionManager = new PermissionManager($pdo, $userId);
 $permissionManager->loadPermissionsToSession();
 
-/* Verifica se as permissões estão carregadas na sessão
-if (isset($_SESSION['user_permissions'])) {
-    echo "<pre>";
-    print_r($_SESSION['user_permissions']);
-    echo "</pre>";
-} else {
-    echo "Permissões não carregadas na sessão.";
-}
-
-var_dump($_SESSION);*/
 
 // Recupera o nome do usuário e armazena na sessão, se não estiver setado
 $userModel = new User($pdo);
@@ -85,7 +75,6 @@ if ($userInfo) {
 ?>
 
 <!DOCTYPE html>
-<!-- Template Name: DashCode - HTML, React, Vue, Tailwind Admin Dashboard Template Author: Codeshaper Website: https://codeshaper.net Contact: support@codeshaperbd.net Like: https://www.facebook.com/Codeshaperbd Purchase: https://themeforest.net/item/dashcode-admin-dashboard-template/42600453 License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project. -->
 <html lang="zxx" dir="ltr" class="light">
 
 <head>
@@ -94,24 +83,18 @@ if ($userInfo) {
   <meta name="description" content="">
   <title>Dashcode - HTML Template</title>
   <link rel="icon" type="image/png" href="assets/images/logo/favicon.svg">
-  <!-- BEGIN: Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- END: Google Font -->
-  <!-- BEGIN: Theme CSS-->
   <link rel="stylesheet" href="assets/css/sidebar-menu.css">
   <link rel="stylesheet" href="assets/css/SimpleBar.css">
   <link rel="stylesheet" href="assets/css/app.css">
-  <!-- END: Theme CSS-->
   <script src="assets/js/settings.js" sync></script>
 </head>
 
 <body class=" font-inter dashcode-app" id="body_class">
-  <!-- [if IE]> <p class="browserupgrade"> You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security. </p> <![endif] -->
   <main class="app-wrapper">
-    <!-- BEGIN: Sidebar -->
-    <!-- BEGIN: Sidebar -->
+
     <div class="sidebar-wrapper group">
       <div id="bodyOverlay" class="w-screen h-screen fixed top-0 bg-slate-900 bg-opacity-50 backdrop-blur-sm z-10 hidden"></div>
       <div class="logo-segment">
@@ -190,38 +173,9 @@ if ($categories) {
 ?>
 
             </ul>
-
-
-        <!-- Upgrade Your Business Plan Card Start --
-        <div class="bg-slate-900 mb-10 mt-24 p-4 relative text-center rounded-2xl text-white" id="sidebar_bottom_wizard">
-          <img src="assets/images/svg/rabit.svg" alt="" class="mx-auto relative -mt-[73px]">
-          <div class="max-w-[160px] mx-auto mt-6">
-            <div class="widget-title font-Inter mb-1">Unlimited Access</div>
-            <div class="text-xs font-light font-Inter">
-              Upgrade your system to business plan
-            </div>
-          </div>
-          <div class="mt-6">
-            <button class="bg-white hover:bg-opacity-80 text-slate-900 text-sm font-Inter rounded-md w-full block py-2 font-medium">
-              Upgrade
-            </button>
-          </div>
-        </div>
-        <!-- Upgrade Your Business Plan Card Start -->
       </div>
     </div>
-    <!-- End: Sidebar -->
-    <!-- End: Sidebar -->
-    <!-- BEGIN: Settings -->
 
-    <!-- BEGIN: Settings -->
-    <!-- Settings Toggle Button 
-    <button class="fixed ltr:md:right-[-29px] ltr:right-0 rtl:left-0 rtl:md:left-[-29px] top-1/2 z-[888] translate-y-1/2 bg-slate-800 text-slate-50 dark:bg-slate-700 dark:text-slate-300 cursor-pointer transform rotate-90 flex items-center text-sm font-medium px-2 py-2 shadow-deep ltr:rounded-b rtl:rounded-t" data-bs-toggle="offcanvas" data-bs-target="#offcanvas" aria-controls="offcanvas">
-      <iconify-icon class="text-slate-50 text-lg animate-spin" icon="material-symbols:settings-outline-rounded"></iconify-icon>
-      <span class="hidden md:inline-block ltr:ml-2 rtl:mr-2">Settings</span>
-    </button>
-
-    <!-- BEGIN: Settings Modal -->
     <div class="offcanvas offcanvas-end fixed bottom-0 flex flex-col max-w-full bg-white dark:bg-slate-800 invisible bg-clip-padding shadow-sm outline-none transition duration-300 ease-in-out text-gray-700 top-0 ltr:right-0 rtl:left-0 border-none w-96" tabindex="-1" id="offcanvas" aria-labelledby="offcanvas">
       <div class="offcanvas-header flex items-center justify-between p-4 pt-3 border-b border-b-slate-300">
         <div>
@@ -342,14 +296,10 @@ if ($categories) {
         </div>
       </div>
     </div>
-    <!-- END: Settings Modal -->
-    <!-- END: Settings -->
 
-    <!-- End: Settings -->
     <div class="flex flex-col justify-between min-h-screen">
       <div>
-        <!-- BEGIN: Header -->
-        <!-- BEGIN: Header -->
+
         <div class="z-[9]" id="app_header">
           <div class="app-header z-[999] ltr:ml-[248px] rtl:mr-[248px] bg-white dark:bg-slate-800 shadow-sm dark:shadow-slate-700">
             <div class="flex justify-between items-center h-full">
@@ -369,7 +319,6 @@ if ($categories) {
                 </button>
 
               </div>
-              <!-- end vertcial -->
               <div class="items-center space-x-4 rtl:space-x-reverse horizental-box">
                 <a href="index.php">
                   <span class="xl:inline-block hidden">
@@ -386,32 +335,23 @@ if ($categories) {
                 </button>
 
               </div>
-              <!-- end horizental -->
 
-              <!-- end top menu -->
               <div class="nav-tools flex items-center lg:space-x-5 space-x-3 rtl:space-x-reverse leading-0">                
-                <!-- Theme Changer -->
 
-                <!-- BEGIN: Toggle Theme -->
                 <div>
                   <button id="themeMood" class="h-[28px] w-[28px] lg:h-[32px] lg:w-[32px] lg:bg-gray-500-f7 bg-slate-50 dark:bg-slate-900 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer rounded-full text-[20px] flex flex-col items-center justify-center">
                     <iconify-icon class="text-slate-800 dark:text-white text-xl dark:block hidden" id="moonIcon" icon="line-md:sunny-outline-to-moon-alt-loop-transition"></iconify-icon>
                     <iconify-icon class="text-slate-800 dark:text-white text-xl dark:hidden block" id="sunIcon" icon="line-md:moon-filled-to-sunny-filled-loop-transition"></iconify-icon>
                   </button>
                 </div>
-                <!-- END: TOggle Theme -->
 
-                <!-- BEGIN: gray-scale Dropdown -->
                 <div>
                   <button id="grayScale" class="lg:h-[32px] lg:w-[32px] lg:bg-slate-100 lg:dark:bg-slate-900 dark:text-white text-slate-900 cursor-pointer
             rounded-full text-[20px] flex flex-col items-center justify-center">
                     <iconify-icon class="text-slate-800 dark:text-white text-xl" icon="mdi:paint-outline"></iconify-icon>
                   </button>
                 </div>
-                <!-- END: gray-scale Dropdown -->
 
-                <!-- BEGIN: Profile Dropdown -->
-                <!-- Profile DropDown Area -->
                 <div class="md:block hidden w-full">
                   <button class="text-slate-800 dark:text-white focus:ring-0 focus:outline-none font-medium rounded-lg text-sm text-center
       inline-flex items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -423,7 +363,6 @@ if ($categories) {
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                   </button>
-                  <!-- Dropdown menu -->
                   <div class="dropdown-menu z-10 hidden bg-white divide-y divide-slate-100 shadow w-44 dark:bg-slate-800 border dark:border-slate-700 !top-[23px] rounded-md
       overflow-hidden" style="width: 150px;">
                     <ul class="py-1 text-sm text-slate-800 dark:text-slate-200">
@@ -449,13 +388,10 @@ if ($categories) {
                     </ul>
                   </div>
                 </div>
-                <!-- END: Header -->
                 <button class="smallDeviceMenuController md:hidden block leading-0">
                   <iconify-icon class="cursor-pointer text-slate-900 dark:text-white text-2xl" icon="heroicons-outline:menu-alt-3"></iconify-icon>
                 </button>
-                <!-- end mobile menu -->
               </div>
-              <!-- end nav tools -->
             </div>
           </div>
         </div>
@@ -475,9 +411,7 @@ if ($categories) {
             </div>
           </div>
         </div>
-        <!-- END: Search Modal -->
-        <!-- END: Header -->
-        <!-- END: Header -->
+
         <div class="content-wrapper transition-all duration-150 ltr:ml-[248px] rtl:mr-[248px]" id="content_wrapper">
     <div class="page-content">
         <div class="transition-all duration-150 container-fluid" id="page_layout">

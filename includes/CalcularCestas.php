@@ -86,4 +86,82 @@ class CalcularCestas {
         
         return [$cestas_completas, $produtos_faltantes, $detalhes_produtos];
     }
+	
+    // Função para salvar ou atualizar a quantidade de cestas criadas
+    public function salvarCestasCriadas(int $id_cesta, string $data, int $quantidade) {
+        // Verificar se já existe uma entrada para o mesmo ano, mês e tipo de cesta
+        $stmt = $this->pdo->prepare("
+            SELECT id FROM cestas_criadas 
+            WHERE id_cesta = :id_cesta AND DATE_FORMAT(data, '%Y-%m') = DATE_FORMAT(:data, '%Y-%m')
+        ");
+        $stmt->execute([
+            ':id_cesta' => $id_cesta,
+            ':data' => $data
+        ]);
+        $existing = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($existing) {
+            // Atualizar a quantidade se já existir uma entrada
+            $stmt = $this->pdo->prepare("
+                UPDATE cestas_criadas 
+                SET quant_criada = :quant_criada
+                WHERE id = :id
+            ");
+            $stmt->execute([
+                ':quant_criada' => $quantidade,
+                ':id' => $existing['id']
+            ]);
+        } else {
+            // Inserir uma nova entrada se não existir
+            $stmt = $this->pdo->prepare("
+                INSERT INTO cestas_criadas (id_cesta, data, quant_criada) 
+                VALUES (:id_cesta, :data, :quant_criada)
+            ");
+            $stmt->execute([
+                ':id_cesta' => $id_cesta,
+                ':data' => $data,
+                ':quant_criada' => $quantidade
+            ]);
+        }
+    }
+
+    // Função para deduzir o estoque com base na quantidade de cestas criadas
+    public function deduzirEstoque(int $id_cesta, int $quantidade): bool {
+        // Obter os produtos e quantidades necessárias para a cesta
+        $stmt = $this->pdo->prepare("
+            SELECT cp.id_produto, cp.quantidade AS quant_por_cesta, e.quant AS estoque_atual
+            FROM cesta_produtos cp
+            JOIN produtos_estoque e ON cp.id_produto = e.id_prod
+            WHERE cp.id_cesta = :id_cesta
+        ");
+        $stmt->execute([':id_cesta' => $id_cesta]);
+        $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Verificar se há estoque suficiente para todos os produtos
+        foreach ($produtos as $produto) {
+            $quantidade_necessaria = $produto['quant_por_cesta'] * $quantidade;
+
+            if ($produto['estoque_atual'] < $quantidade_necessaria) {
+                // Se o estoque é insuficiente para qualquer produto, retornar false
+                return false;
+            }
+        }
+
+        // Deduzir o estoque se todos os produtos tiverem quantidade suficiente
+        foreach ($produtos as $produto) {
+            $quantidade_deduzir = $produto['quant_por_cesta'] * $quantidade;
+
+            $stmtUpdate = $this->pdo->prepare("
+                UPDATE produtos_estoque 
+                SET quant = GREATEST(quant - :quantidade_deduzir, 0)
+                WHERE id_prod = :id_produto
+            ");
+            $stmtUpdate->execute([
+                ':quantidade_deduzir' => $quantidade_deduzir,
+                ':id_produto' => $produto['id_produto']
+            ]);
+        }
+
+        return true;
+    }
 }

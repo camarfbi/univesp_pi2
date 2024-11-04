@@ -47,7 +47,12 @@ $estoque_atualizado = $estoque;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerenciar Cestas</title>
-    <link rel="stylesheet" href="path/to/your/tailwind.css">
+    <link rel="stylesheet" href="/node_modules/tailwind/tailwind.css">
+
+  <!--  <div class="bg-blue-500 text-white text-center p-4">
+        Tailwind CSS está funcionando!
+    </div> -->
+
 </head>
 <body>
     <h1 class="text-3xl font-bold mb-5">Gerenciamento de Cestas</h1>
@@ -90,13 +95,13 @@ list($cestas_completas, $produtos_faltantes, $detalhes_produtos) = $calculoCesta
                 
                 <span class="block text-sm text-slate-600 font-medium dark:text-white mb-1">Produtos Faltantes</span>
                 <?php if (!empty($produtos_faltantes)): ?>
-                    <ul class="list-disc list-inside text-slate-600 dark:text-white">
+                    <ul class="block mb-2 text-slate-900 dark:text-white font-medium" style="font-weight: 800;">
                         <?php foreach ($produtos_faltantes as $produto => $quant): ?>
-                            <li><?= htmlspecialchars($produto); ?>: <?= htmlspecialchars($quant); ?> faltando</li>
+                            <li>Pelo menos  <?= htmlspecialchars($quant); ?> <?= htmlspecialchars($produto); ?> faltando para montar uma cesta</li>
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <p class="text-success-500">Todos os produtos disponíveis.</p>
+                    <p class="text-danger-500"><b>Com os produtos disponíveis foi possível montar <?= $cestas_completas; ?> cestas.</b></p>
                 <?php endif; ?>
             </div>
         <?php endforeach; ?>
