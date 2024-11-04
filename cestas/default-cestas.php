@@ -31,7 +31,7 @@ $permissionManager = new PermissionManager($pdo, $userId);
 $pageAndDir = $permissionManager->getCurrentPageAndDirectory();
 checkPermission($permissionManager, $pageAndDir['page'], $pageAndDir['dir']);
 
-// Iniciar modal
+//Iniciar modal
 $cestaModal = new Cesta($pdo);
 
 // Captura o ID da cesta para edição
@@ -45,7 +45,7 @@ $query_produtos = $pdo->query("SELECT id, nome FROM produtos");
 $produtos_disponiveis = $query_produtos->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt = $pdo->prepare("
-    SELECT p.id AS id_produto, p.nome, cp.quantidade 
+    SELECT p.nome, cp.quantidade, cp.id
     FROM cesta_produtos cp
     JOIN produtos p ON cp.id_produto = p.id
     WHERE cp.id_cesta = :id_cesta
@@ -65,7 +65,7 @@ if (is_string($produtos_selecionados)) {
     $produtos_selecionados = json_decode($produtos_selecionados, true) ?: explode(',', $produtos_selecionados);
 }
 
-// Processamento do formulário (inserção ou edição)
+/// Processamento do formulário (inserção ou edição)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['acao']) && $_POST['acao'] == 'CESTA') {
         // Captura os dados do formulário
@@ -73,6 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Verifica se a cesta já existe
         if ($cestaModal->cestaExists($formData['nome'], $editCestaId)) {
+            // Em vez de redirecionar, apenas defina a mensagem de erro
             $responseMessage = [
                 'message' => 'A cesta ' . $formData['nome'] . ' já existe!',
                 'style' => 'bg-danger-500'
@@ -80,13 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Processa os produtos selecionados
             $produtos_json = json_encode($formData['produtos']);
-            $produtosSelecionadosIds = array_map(function($produto) use ($pdo) {
-                $stmt = $pdo->prepare("SELECT id FROM produtos WHERE nome = :nome");
-                $stmt->execute([':nome' => $produto]);
-                $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                return $result ? $result['id'] : null;
-            }, $formData['produtos']);
-            $produtosSelecionadosIds = array_filter($produtosSelecionadosIds);
 
             // Atualiza ou cria uma nova cesta
             if ($editCestaId > 0) {
@@ -98,19 +92,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':produtos' => $produtos_json,
                     ':id' => $editCestaId
                 ]);
-
-                // Remover produtos que não estão mais na cesta
-                $stmt = $pdo->prepare("
-                    DELETE FROM cesta_produtos
-                    WHERE id_cesta = :id_cesta AND id_produto NOT IN (" . implode(',', $produtosSelecionadosIds) . ")
-                ");
-                $stmt->execute([':id_cesta' => $editCestaId]);
-
+				
+				header("Location: dashboard.php?page=cestas/default-cestas&id=$editCestaId");
+				
                 $responseMessage = [
                     'message' => 'Cesta atualizada com sucesso!',
                     'style' => 'bg-success-500'
                 ];
-				
             } else {
                 // Cria uma nova cesta
                 $stmt = $pdo->prepare("INSERT INTO cesta (nome, tipo, produtos) VALUES (:nome, :tipo, :produtos)");
@@ -125,13 +113,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
             }
         }
-		// Redireciona de volta para a página de edição da cesta
-		header('Location: ./dashboard.php?page=cestas/default-cestas&id=' . $editCestaId);
-		exit;
     }
 }
-?>
 
+
+?>
 <!-- Exibe a mensagem de resposta -->
 <?php if ($responseMessage): ?>
 <div class="py-[18px] px-6 font-normal text-sm rounded-md <?php echo htmlspecialchars($responseMessage['style']); ?> text-white">
@@ -188,14 +174,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <button type="submit" class="btn inline-flex justify-center btn-dark">Salvar</button>
             </div>
-
-		<?php if ($produtosRegistrados): ?>
+				<?php if ($produtosRegistrados): ?>
 					<h3 class="text-lg font-semibold mt-6">Produtos Registrados na Cesta</h3>
 					<ul class="list-disc list-inside">
 						<?php foreach ($produtosRegistrados as $produto): ?>
-							<li><?= htmlspecialchars($produto['nome']); ?>: <?= (int)$produto['quantidade']; ?> unidade(s)</li>
+							<li>
+								<?= htmlspecialchars($produto['nome']); ?>: <?= (int)$produto['quantidade']; ?> unidade(s)
+								
+								<!-- Botão para excluir a quantidade -->
+								<form method="POST" action="./dashboard.php?page=cestas/deletar-quantidade" style="display:inline;">
+								    <input type="hidden" value="CESTA" name="acao">
+									<input type="hidden" name="acao1" value="DELETE_CESTA">
+									<input type="hidden" name="id_cesta" value="<?= $editCestaId; ?>">
+									<input type="hidden" name="id_produto" value="<?= $produto['id']; ?>">
+									<button type="submit" class="btn btn-danger inline-flex items-center text-sm">
+										Excluir
+									</button>
+								</form>
+							</li>
 						<?php endforeach; ?>
 					</ul>
+
 				<?php endif; ?>
         </div>
     </div>

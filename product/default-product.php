@@ -96,6 +96,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'message' => 'Produto atualizado com sucesso!',
                     'style' => 'bg-success-500'
                 ];
+				
+				// Redireciona de volta para a página principal de cestas
+				header("Location: dashboard.php?page=product/list-product");
+				exit;
             } else {
                 // Cria uma nova produto
                 $stmt = $pdo->prepare("INSERT INTO produtos (nome, tipo, un_med) VALUES (:nome, :tipo, :un_med)");
@@ -113,6 +117,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'message' => 'Produto criado com sucesso!',
                     'style' => 'bg-success-500'
                 ];
+				
+				// Redireciona de volta para a página principal de cestas
+				echo '<meta http-equiv="refresh" content="3.5;url=dashboard.php?page=product/list-product">';
+				exit;
             }
         }
     }
@@ -172,6 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="Sachê" <?php echo $un_produto == 'Sachê' ? 'selected' : ''; ?>>Sachê</option>
                         <option value="Unidade" <?php echo $un_produto == 'Unidade' ? 'selected' : ''; ?>>Unidade</option>
                         <option value="Peça" <?php echo $un_produto == 'Peça' ? 'selected' : ''; ?>>Peça</option>
+                        <option value="Pacote" <?php echo $un_produto == 'Pacote' ? 'selected' : ''; ?>>Pacote</option>
                     </select>
                 </div>
 

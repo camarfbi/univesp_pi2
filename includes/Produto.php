@@ -67,11 +67,12 @@ class Produto {
 	// Processa o formulário de dados
 	public function getFormData(array $postData, ?array $currentData, int $idAsso = 0): array {
 		return [
-			'nome' => $postData['nome'] ?? $currentData['nome'] ?? '', // Captura o campo nome_produtos corretamente
+			'nome' => $postData['nome_produto'] ?? $currentData['nome'] ?? '', // Corrige para capturar 'nome_produto'
 			'tipo' => $postData['tipo'] ?? $currentData['tipo'] ?? '', // Captura o campo tipo_produtos corretamente
-			'un_med' => $postData['un_med'] ?? $currentData['un_med'] ?? [] // Captura os produtos corretamente
+			'un_med' => $postData['un_med'] ?? $currentData['un_med'] ?? '' // Captura a unidade de medida corretamente
 		];
 	}
+
 
     // Método para excluir uma produtos pelo ID
     public function deleteProduto(int $id): bool {
@@ -106,4 +107,5 @@ class Produto {
         $stmt->execute(['id_prod' => $idProd]);
         return (bool) $stmt->fetchColumn();
     }
+	
 }

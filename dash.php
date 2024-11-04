@@ -57,7 +57,7 @@ $estoque_atualizado = $estoque;
 <body>
     <h1 class="text-3xl font-bold mb-5">Gerenciamento de Cestas</h1>
 
-    <div class="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-3">
+    <div class="grid md:grid-cols-1 sm:grid-cols-1 grid-cols-1 gap-3">
         <?php foreach ($cestas as $index => $cesta): ?>
             <?php
             $queryCestaProdutos->execute(['id_cesta' => $cesta['id']]);
@@ -86,7 +86,7 @@ list($cestas_completas, $produtos_faltantes, $detalhes_produtos) = $calculoCesta
                     <?php foreach ($detalhes_produtos as $produto): ?>
                         <li>
                             <?= htmlspecialchars($produto['nome']); ?>: 
-                            <?= htmlspecialchars($produto['quant_necessaria']); ?> necessária, 
+                            <?= htmlspecialchars($produto['quant_necessaria']); ?> necessário(s), 
                             <?= htmlspecialchars($produto['quant_estoque']); ?> em estoque,
                             restam: <?= htmlspecialchars($produto['estoque_restante']); ?>
                         </li>

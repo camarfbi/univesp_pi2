@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+var_dump($_POST);
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -32,6 +34,7 @@ $pageAndDir = $permissionManager->getCurrentPageAndDirectory();
 checkPermission($permissionManager, $pageAndDir['page'], $pageAndDir['dir']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	$idProduto = isset($_POST['id_produto']) ? (int)$_POST['id_produto'] : 0;
     $idCesta = (int)$_POST['id_cesta'];
     $quantidades = $_POST['quantidades'] ?? [];
     $produtosSelecionadosIds = array_keys($quantidades);
@@ -62,5 +65,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Redireciona de volta para a página de edição da cesta
     header('Location: ./dashboard.php?page=cestas/default-cestas&id=' . $idCesta);
     exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+	if($_POST['acao'] == 'DEL_PROD_CESTA'){
+		$idProduto = isset($_POST['id_produto']) ? (int)$_POST['id_produto'] : 0;
+		$idCesta = (int)$_POST['id_cesta'];
+
+		if ($idCesta > 0 && $idProduto > 0) {
+			// Deleta o registro da tabela `cesta_produtos` para o produto específico
+			$stmt = $pdo->prepare("DELETE FROM cesta_produtos WHERE id = :id_produto");
+			$stmt->execute([
+				':id_produto' => $idProduto
+			]);
+		}
+		// Redireciona de volta para a página de edição da cesta
+		header("Location: dashboard.php?page=cestas/default-cestas&id=$idCesta");
+		exit;
+	}
 }
 ?>
